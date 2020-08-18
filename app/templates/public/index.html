@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="shortcut icon" type="image/ico" href="http://www.datatables.net/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1.0, user-scalable=no">
+  <title>DataTables example - Foundation</title>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/r/zf-5.5.2/jqc-1.11.3,dt-1.10.8/datatables.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/dataTables.foundation.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.foundation.css">
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/styles/shCore.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/demo.css') }}">
+  <style type="text/css" class="init">
+  
+  </style>
+  <script type="text/javascript" language="javascript" src="https://code.jquery.com/jquery-3.3.1.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/v/zf/jq-3.3.1/dt-1.10.20/datatables.min.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datatables/1.10.19/js/dataTables.foundation.js"></script>
+  <script type="text/javascript" language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/SyntaxHighlighter/3.0.83/scripts/shCore.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.2.3/js/dataTables.responsive.min.js"></script>
+  <script type="text/javascript" language="javascript" class="init">
+  
+$(document).ready( function () {
+    var keywords = ['aslr', 'ida pro', 'gdb', 'windbg', 'immunity debugger', 'boofuzz', 'peach fuzzer', 'winafl', 'python', 'assembly','exploits', 'metasploit', 'metasploit framework', 'pentest', 'computer security', 'hacking', 'oscp', 'osce', 'osee', 'penetration testing', 'offensive security', 'mitre att&ck','fuzzing', 'clang', 'llvm', 'address sanitizer', 'afl', 'fuzzers']
+    var table = $('#example').DataTable({
+        responsive: true,
+        "ajax": {
+            "url": "/index_get_data",
+            "dataType": "json",
+            "dataSrc": "jobs",
+            "contentType":"application/json"
+        },
+        columnDefs: [{
+            targets: 4,
+            render: function (data) {
+              if (keywords.some(word => data.includes(word)))
+                return "<span class='label label-success'>FOUND</span>";
+              else 
+                return  "<span class='label label-danger'>NOT_FOUND</span>";
+
+            }
+        },{
+          targets: 5,
+            render: function (data) {
+                return '<a href="'+data+'">Link</a>'
+            }
+        }],
+        "columns": [
+            {"data": "job_title"},
+            {"data": "company"},
+            {"data": "city"},
+            {
+              data: 'date',
+              render: {
+                _: 'display',
+                sort: 'timestamp'
+              }
+
+            },
+            {"data": "job_description"},
+            {"data": "url"},
+        ],
+    });
+    setInterval( function () {
+        table.ajax.reload( null, false );
+    }, 30000 );
+} );
+
+  </script>
+</head>
+<body class="dt-example dt-example-foundation">
+  <div class="container">
+    <section>
+      <h1>DataTables example <span>Foundation</span></h1>
+      <div class="demo-html"></div>
+      <table id="example" class="display" style="width:100%">
+        <thead>
+          <tr>
+            <th>Job Title</th>
+            <th>Company</th>
+            <th>City</th>
+            <th>Date</th>
+            <th>Cleared</th>
+            <th>Url</th>
+          </tr>
+        </thead>
+      </table>
+    </section>
+  </div>
+</body>
+</html>
